@@ -1,0 +1,6 @@
+                    Single      Fan Out     Pool    GOGC=1000
+Total Run Time      2513 ms     457 ms      435 ms  372 ms
+Top Memory          6.5 MiB     60.5 MiB    111 MiB 447 MiB
+Total GCs           328         67          41      4
+Wall Duration       136 ms      189 ms      150 ms  71 ms
+% Time in GCs       5%          41%         34%     19%
