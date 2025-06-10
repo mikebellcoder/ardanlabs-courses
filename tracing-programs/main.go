@@ -84,7 +84,6 @@ func freq(topic string, docs []string) int {
 					log.Printf("Opening Document [%s] : ERROR : %v", doc, err)
 					return
 				}
-				defer f.Close()
 
 				data, err := io.ReadAll(f)
 				if err != nil {
@@ -97,7 +96,7 @@ func freq(topic string, docs []string) int {
 					log.Printf("Decoding Document [%s] : ERROR : %v", doc, err)
 					return
 				}
-
+				f.Close()
 				for _, item := range d.Channel.Items {
 					if strings.Contains(item.Title, topic) {
 						lfound++
