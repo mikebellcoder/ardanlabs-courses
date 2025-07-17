@@ -12,4 +12,8 @@ curl-app:
 
 .PHONY: install-delve
 install-delve:
-	go install github.com/go-delve/delve/cmd/dlv@latest
+	go install github.com/go-delve/delve/cmd/dlv@v1.24.2
+
+.PHONY: debug
+debug:
+	dlv debug
