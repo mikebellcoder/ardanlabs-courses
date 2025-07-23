@@ -1,0 +1,62 @@
+package main
+
+import (
+	"fmt"
+	"os"
+	"os/signal"
+	"time"
+
+	log "example/module-11/adv-logger/logger"
+)
+
+type device struct {
+	problem bool
+}
+
+// Write implements the io.Writer interface
+func (d *device) Write(p []byte) (n int, err error) {
+	for d.problem {
+		// Simulate disk problems.
+		time.Sleep(time.Second)
+	}
+
+	fmt.Print(string(p))
+	return len(p), nil
+}
+
+func main() {
+
+	// Number of goroutines that will be writing logs.
+	const grs = 10
+
+	// Create a logger value with a buffer of capacity
+	// for each goroutine that will be logging.
+	var d device
+	l := log.New(&d, grs)
+
+	// Generate goroutines, each writing to disk
+	for i := range grs {
+		go func(id int) {
+			for {
+				l.Println(fmt.Sprintf("%d: log data\n", id))
+				time.Sleep(10 * time.Millisecond)
+			}
+		}(i)
+	}
+
+	// We want to control the simulated disk blocking. Capture
+	// interrupt signal to toggle device issues. Use <ctrl> z
+	// to kill the program.
+
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, os.Interrupt)
+
+	for {
+		<-sigChan
+
+		// I appreciate we have a data race here with the Write
+		// method. Let's keep things simple to show the mechanics.
+		d.problem = !d.problem
+	}
+
+}
